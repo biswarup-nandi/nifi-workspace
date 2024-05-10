@@ -1,0 +1,85 @@
+version: '3'
+
+networks:
+  nifinet:
+    driver: bridge
+
+services:
+  zookeeper:
+    image: zookeeper:latest
+    container_name: zookeeper
+    networks:
+      - nifinet
+    ports:
+      - "2181:2181"
+
+  nifi-registry:
+    image: apache/nifi-registry:latest
+    container_name: nifi-registry
+    networks:
+      - nifinet
+    ports:
+      - "18080:18080"
+    environment:
+      - NIFI_REGISTRY_WEB_HTTP_PORT=18080
+      - NIFI_REGISTRY_SECURITY_USER_LOGIN=admin
+      - NIFI_REGISTRY_SECURITY_USER_PASSWORD=admin123
+    volumes:
+      - ./nifi-registry-users.xml:/opt/nifi-registry/nifi-registry-current/conf/users.xml
+
+  nifi-node-1:
+    image: apache/nifi:latest
+    container_name: nifi-node-1
+    networks:
+      - nifinet
+    ports:
+      - "8081:8080"
+    environment:
+      - NIFI_WEB_HTTP_PORT=8080
+      - NIFI_WEB_HTTP_HOST=nifi-node-1
+      - NIFI_CLUSTER_IS_NODE=true
+      - NIFI_CLUSTER_NODE_PROTOCOL_PORT=8082
+      - NIFI_ZK_CONNECT_STRING=zookeeper:2181
+      - NIFI_REGISTRY_CLIENT_SERVICE=registry:18080
+      - NIFI_ELECTION_MAX_WAIT=1 min
+      - NIFI_SENSITIVE_PROPS_KEY=abcde12345600aabbgghfffdgf
+    volumes:
+      - ./nifi-users.xml:/opt/nifi/nifi-current/conf/users.xml
+
+  nifi-node-2:
+    image: apache/nifi:latest
+    container_name: nifi-node-2
+    networks:
+      - nifinet
+    ports:
+      - "8082:8080"
+    environment:
+      - NIFI_WEB_HTTP_PORT=8080
+      - NIFI_WEB_HTTP_HOST=nifi-node-2
+      - NIFI_CLUSTER_IS_NODE=true
+      - NIFI_CLUSTER_NODE_PROTOCOL_PORT=8082
+      - NIFI_ZK_CONNECT_STRING=zookeeper:2181
+      - NIFI_REGISTRY_CLIENT_SERVICE=registry:18080
+      - NIFI_ELECTION_MAX_WAIT=1 min
+      - NIFI_SENSITIVE_PROPS_KEY=abcde12345600aabbgghfffdgf
+    volumes:
+      - ./nifi-users.xml:/opt/nifi/nifi-current/conf/users.xml
+
+  nifi-node-3:
+    image: apache/nifi:latest
+    container_name: nifi-node-3
+    networks:
+      - nifinet
+    ports:
+      - "8083:8080"
+    environment:
+      - NIFI_WEB_HTTP_PORT=8080
+      - NIFI_WEB_HTTP_HOST=nifi-node-3
+      - NIFI_CLUSTER_IS_NODE=true
+      - NIFI_CLUSTER_NODE_PROTOCOL_PORT=8082
+      - NIFI_ZK_CONNECT_STRING=zookeeper:2181
+      - NIFI_REGISTRY_CLIENT_SERVICE=registry:18080
+      - NIFI_ELECTION_MAX_WAIT=1 min
+      - NIFI_SENSITIVE_PROPS_KEY=abcde12345600aabbgghfffdgf
+    volumes:
+      - ./nifi-users.xml:/opt/nifi/nifi-current/conf/users.xml
