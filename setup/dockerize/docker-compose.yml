@@ -22,8 +22,6 @@ services:
       - "18080:18080"
     environment:
       - NIFI_REGISTRY_WEB_HTTP_PORT=18080
-      - NIFI_REGISTRY_SECURITY_USER_LOGIN=admin
-      - NIFI_REGISTRY_SECURITY_USER_PASSWORD=admin123
     volumes:
       - ./nifi-registry-users.xml:/opt/nifi-registry/nifi-registry-current/conf/users.xml
 
@@ -43,6 +41,8 @@ services:
       - NIFI_REGISTRY_CLIENT_SERVICE=registry:18080
       - NIFI_ELECTION_MAX_WAIT=1 min
       - NIFI_SENSITIVE_PROPS_KEY=abcde12345600aabbgghfffdgf
+      - SINGLE_USER_CREDENTIALS_USERNAME=admin
+      - SINGLE_USER_CREDENTIALS_PASSWORD=long_password_will_be_provided
     volumes:
       - ./nifi-users.xml:/opt/nifi/nifi-current/conf/users.xml
 
@@ -62,6 +62,8 @@ services:
       - NIFI_REGISTRY_CLIENT_SERVICE=registry:18080
       - NIFI_ELECTION_MAX_WAIT=1 min
       - NIFI_SENSITIVE_PROPS_KEY=abcde12345600aabbgghfffdgf
+      - SINGLE_USER_CREDENTIALS_USERNAME=admin
+      - SINGLE_USER_CREDENTIALS_PASSWORD=long_password_will_be_provided
     volumes:
       - ./nifi-users.xml:/opt/nifi/nifi-current/conf/users.xml
 
@@ -81,5 +83,7 @@ services:
       - NIFI_REGISTRY_CLIENT_SERVICE=registry:18080
       - NIFI_ELECTION_MAX_WAIT=1 min
       - NIFI_SENSITIVE_PROPS_KEY=abcde12345600aabbgghfffdgf
+      - SINGLE_USER_CREDENTIALS_USERNAME=admin
+      - SINGLE_USER_CREDENTIALS_PASSWORD=long_password_will_be_provided
     volumes:
       - ./nifi-users.xml:/opt/nifi/nifi-current/conf/users.xml
